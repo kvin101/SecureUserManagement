@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>Login & Registration Page</title>
+  <style>
+    @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Raleway:wght@700&display=swap");
+
+    :root {
+      --primary-color: #4e54c8;
+      --secondary-color: #8f94fb;
+      --text-color: #333;
+      --error-color: #ff4757;
+      --success-color: #28a745;
+    }
+
+    body {
+      font-family: "Poppins", sans-serif;
+      background: linear-gradient(135deg,
+      var(--primary-color),
+      var(--secondary-color));
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    .wrapper {
+      position: relative;
+      width: 100%;
+      max-width: 400px;
+      padding: 20px;
+    }
+
+    .container {
+      background-color: rgba(255, 255, 255, 0.95);
+      border-radius: 12px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      padding: 40px;
+      width: 100%;
+      box-sizing: border-box;
+      text-align: center;
+      transition: all 0.5s ease;
+    }
+
+    .container.hidden {
+      display: none;
+    }
+
+    h2 {
+      font-family: "Raleway", sans-serif;
+      color: var(--primary-color);
+      margin-bottom: 30px;
+      font-size: 28px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+      /* text-align: left; */
+      position: relative;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+      color: var(--text-color);
+    }
+
+    .form-group input {
+      width: 100%;
+      height: 50px;
+      padding: 10px 15px;
+      box-sizing: border-box;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+      font-size: 16px;
+    }
+
+    .form-group input:focus {
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 2px rgba(78, 84, 200, 0.1);
+      outline: none;
+    }
+
+    .form-group .toggle-password {
+      position: absolute;
+      top: 50%;
+      right: 10px;
+      transform: translateY(-50%);
+      cursor: pointer;
+      color: #777;
+      background: none;
+      border: none;
+      font-size: 18px;
+    }
+
+    .form-group span {
+      /* width: 100%; */
+      /* padding: 12px 20px; */
+      background: linear-gradient(to right,
+      var(--primary-color),
+      var(--secondary-color));
+      color: white;
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-top: 15px;
+    }
+
+    .form-group button {
+      width: 100%;
+      padding: 12px 20px;
+      background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 18px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+    }
+
+    .form-group a {
+      display: block;
+      margin-top: 15px;
+      color: var(--primary-color);
+      text-decoration: none;
+      transition: color 0.3s;
+      font-weight: 600;
+    }
+
+    .form-group a:hover {
+      color: var(--secondary-color);
+    }
+
+    .error-message {
+      color: var(--error-color);
+      font-size: 14px;
+      margin-top: 5px;
+    }
+
+    #errorDisplay {
+      display: none;
+      background-color: #fff3cd;
+      color: #856404;
+      padding: 10px;
+      margin-bottom: 20px;
+      border-radius: 5px;
+      border: 1px solid #ffeeba;
+    }
+
+    @media (max-width: 480px) {
+      .wrapper {
+        padding: 10px;
+      }
+
+      .container {
+        padding: 20px;
+      }
+
+      h2 {
+        font-size: 24px;
+      }
+
+      .form-group input {
+        font-size: 14px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+<div class="wrapper">
+  <div class="container" id="loginContainer">
+    <h2>Welcome Back</h2>
+    <div class="form-group">
+      <label for="loginUsername">Username or Email</label>
+      <input id="loginUsername" name="loginUsername" required type="text"/>
+    </div>
+    <div class="form-group">
+      <label for="loginPassword">Password</label>
+      <input id="loginPassword" name="loginPassword" required type="password"/>
+      <span class="toggle-password" onclick="togglePasswordVisibility('loginPassword')">
+          👁️
+        </span>
+    </div>
+    <div class="form-group">
+      <button onclick="login()">Log In</button>
+    </div>
+    <div class="form-group">
+      <a href="#" onclick="showResetPassword()">Forgot Password?</a>
+    </div>
+    <div class="form-group">
+      <a href="#" onclick="showSignUp()">New here? Create an account</a>
+    </div>
+  </div>
+
+  <div class="container hidden" id="signUpContainer">
+    <h2>Create Account</h2>
+    <div class="form-group">
+      <label for="firstName">First Name</label>
+      <input id="firstName" name="firstName" required type="text"/>
+    </div>
+    <div class="form-group">
+      <label for="lastName">Last Name</label>
+      <input id="lastName" name="lastName" required type="text"/>
+    </div>
+    <div class="form-group">
+      <label for="username">Username</label>
+      <input id="username" name="username" required type="text"/>
+    </div>
+    <div class="form-group">
+      <label for="email">Email</label>
+      <input id="email" name="email" required type="email"/>
+      <span class="error-message" id="emailError"></span>
+    </div>
+    <div class="form-group">
+      <label for="password">Password</label>
+      <input id="password" name="password" required type="password"/>
+      <span class="toggle-password" onclick="togglePasswordVisibility('password')">
+          👁️
+        </span>
+      <span class="error-message" id="passwordError"></span>
+    </div>
+    <div class="form-group">
+      <button onclick="register()">Sign Up</button>
+    </div>
+    <div class="form-group">
+      <a href="#" onclick="showLogin()">Already have an account? Log in</a>
+    </div>
+  </div>
+
+  <div class="container hidden" id="resetPasswordContainer">
+    <h2>Reset Password</h2>
+    <div class="form-group">
+      <label for="resetEmail">Email</label>
+      <input id="resetEmail" name="resetEmail" required type="email"/>
+    </div>
+    <div class="form-group">
+      <button onclick="resetPassword()">Reset Password</button>
+    </div>
+    <div class="form-group">
+      <a href="#" onclick="showLogin()">Back to Login</a>
+    </div>
+  </div>
+  <div id="errorDisplay"></div>
+</div>
+
+<script>
+  function showLogin() {
+    document.getElementById("signUpContainer").classList.add("hidden");
+    document
+    .getElementById("resetPasswordContainer")
+    .classList.add("hidden");
+    document.getElementById("loginContainer").classList.remove("hidden");
+  }
+
+  function showSignUp() {
+    document.getElementById("loginContainer").classList.add("hidden");
+    document
+    .getElementById("resetPasswordContainer")
+    .classList.add("hidden");
+    document.getElementById("signUpContainer").classList.remove("hidden");
+  }
+
+  function showResetPassword() {
+    document.getElementById("loginContainer").classList.add("hidden");
+    document.getElementById("signUpContainer").classList.add("hidden");
+    document
+    .getElementById("resetPasswordContainer")
+    .classList.remove("hidden");
+  }
+
+  function validateEmail(email) {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  }
+
+  function validatePassword(password) {
+    const uppercaseRegex = /[A-Z]/;
+    const lowercaseRegex = /[a-z]/;
+    const numberRegex = /[0-9]/;
+    const specialCharRegex = /[!@#$%^&*(),.?":{}|<>]/;
+    return (
+        password.length >= 8 &&
+        uppercaseRegex.test(password) &&
+        lowercaseRegex.test(password) &&
+        numberRegex.test(password) &&
+        specialCharRegex.test(password)
+    );
+  }
+
+  function register() {
+    const email = document.getElementById("email").value;
+    const emailError = document.getElementById("emailError");
+    const password = document.getElementById("password").value;
+    const passwordError = document.getElementById("passwordError");
+
+    if (!validateEmail(email)) {
+      emailError.textContent = "Please enter a valid email address";
+      return;
+    } else {
+      emailError.textContent = "";
+    }
+
+    if (!validatePassword(password)) {
+      passwordError.textContent =
+          "Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one number, and one special character";
+      return;
+    } else {
+      passwordError.textContent = "";
+    }
+
+    // Make API call for sign-up
+    fetch("http://localhost:8085/api/auth/signup", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        firstName: document.getElementById("firstName").value,
+        lastName: document.getElementById("lastName").value,
+        username: document.getElementById("username").value,
+        email: document.getElementById("email").value,
+        password: document.getElementById("password").value,
+      }),
+    })
+    .then((response) => {
+      if (!response.ok) {
+        return response.json().then((errorData) => {
+          throw errorData;
+        });
+      }
+      return response.json();
+    })
+    .then((data) => {
+      window.location.href = "index.html";
+    })
+    .catch((error) => {
+      console.error("Error signing up:", error);
+      handleError(error);
+    });
+  }
+
+  function handleError(data) {
+    let errorMessage = new Error(`${data.status}: ${data.error} : `);
+    if (data.messages && data.messages.length > 0) {
+      errorMessage += data.messages.join('\n');
+    }
+    if (data.message) {
+      errorMessage += "\n" + data.message + "\n";
+    }
+    const errorDisplay = document.getElementById("errorDisplay");
+    errorDisplay.textContent = errorMessage;
+    errorDisplay.style.display = "block";
+    setTimeout(() => {
+      errorDisplay.style.display = "none";
+    }, 5000);
+  }
+
+  function login() {
+    const loginUsername = document.getElementById("loginUsername").value;
+    const loginPassword = document.getElementById("loginPassword").value;
+
+    if (!loginUsername || !loginPassword) {
+      handleError({
+        status: 400,
+        error: "Validation Error",
+        messages: ["Please fill in all fields"],
+      });
+      return;
+    }
+
+    // Make API call for sign-in
+    fetch("http://localhost:8085/api/auth/signin", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        usernameOrEmail: loginUsername,
+        password: loginPassword,
+      }),
+    })
+    .then((response) => {
+      if (!response.ok) {
+        return response.json().then((errorData) => {
+          throw errorData;
+        });
+      }
+      return response.json();
+    })
+    .then((data) => {
+      localStorage.setItem("token", data.jwtToken);
+      window.location.href = "profile.html";
+    })
+    .catch((error) => {
+      console.error("Error signing in:", error);
+      handleError(error);
+    });
+  }
+
+  function resetPassword() {
+    const resetEmail = document.getElementById("resetEmail").value;
+
+    if (!validateEmail(resetEmail)) {
+      handleError({
+        status: 400,
+        error: "Validation Error",
+        messages: ["Please enter a valid email address"],
+      });
+      return;
+    }
+
+    // Here you would make an API call for password reset
+    // For now, we'll just show a success message
+    handleError({
+      status: 200,
+      error: "Success",
+      messages: ["Password reset email sent. Please check your inbox."],
+    });
+
+    document.getElementById("resetEmail").value = "";
+  }
+
+  function togglePasswordVisibility(fieldId) {
+    const field = document.getElementById(fieldId);
+    if (field.type === "password") {
+      field.type = "text";
+      field.nextElementSibling.textContent = "🔒";
+    } else {
+      field.type = "password";
+      field.nextElementSibling.textContent = "👁️";
+    }
+  }
+</script>
+</body>
+
+</html>
